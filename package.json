@@ -1,0 +1,24 @@
+{
+  "name": "neo-tycoon",
+  "version": "1.0.5",
+  "description": "Neo Tycoon A Mini Tycoon Simulator",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "keywords": [],
+  "author": "two plasma studios",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.tycoon.game",
+    "win": {
+      "target": "portable",
+      "icon": "icon.ico"
+    }
+  }
+}

@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>🏙️ NEO TYCOON · Multilingual v4</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Segoe UI', 'Poppins', sans-serif;
+      background: #050a14;
+    }
+    #click-area {
+      position: absolute;
+      top: 30px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      z-index: 20;
+      pointer-events: none;
+    }
+    #clickButton {
+      background: radial-gradient(circle at 30% 20%, #2563eb, #1e3a8a);
+      border: none;
+      border-bottom: 8px solid #0f2557;
+      color: white;
+      font-size: 2.2rem;
+      font-weight: bold;
+      padding: 22px 50px;
+      border-radius: 120px;
+      box-shadow: 0 12px 0 #0a1a2f, 0 20px 35px #00000099, 0 0 40px #3b82f6aa;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 5px;
+      border: 2px solid #7dd3fc;
+      text-shadow: 0 2px 0 #00000080;
+      transition: margin-top 0.06s, box-shadow 0.06s;
+      pointer-events: auto;
+      position: relative;
+    }
+    #clickButton:active {
+      margin-top: 8px;
+      box-shadow: 0 5px 0 #0a1a2f, 0 15px 30px black, 0 0 50px #0ff;
+    }
+    #game-ui {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    #money-panel {
+      background: rgba(0, 20, 40, 0.7);
+      backdrop-filter: blur(8px);
+      padding: 16px 28px;
+      border-radius: 60px;
+      border: 1px solid #0ff;
+      box-shadow: 0 0 40px #00ffff55;
+      display: inline-block;
+      pointer-events: auto;
+      color: white;
+      text-shadow: 0 0 20px cyan;
+    }
+    #stats {
+      position: absolute;
+      bottom: 30px;
+      left: 20px;
+      z-index: 10;
+      color: #b0f0ff;
+      background: #0a1424cc;
+      padding: 12px 22px;
+      border-radius: 50px;
+      backdrop-filter: blur(5px);
+      border: 1px solid #0ff9;
+      pointer-events: none;
+    }
+    #business-panel {
+      position: absolute;
+      bottom: 30px;
+      right: 20px;
+      z-index: 10;
+      width: 300px;
+      max-height: 65vh;
+      overflow-y: auto;
+      background: #0f1a2be0;
+      backdrop-filter: blur(12px);
+      border-radius: 32px;
+      padding: 16px;
+      border: 1px solid #0ff9;
+      box-shadow: 0 0 50px #00000080;
+      pointer-events: auto;
+      color: #e2f0ff;
+    }
+    .business-item {
+      background: #1a2c44;
+      margin-bottom: 10px;
+      border-radius: 24px;
+      padding: 14px 16px;
+      border-left: 8px solid;
+      box-shadow: inset 0 1px 5px #00000099;
+    }
+    .buy-btn {
+      background: #2a4a6a;
+      border: none;
+      border-bottom: 4px solid #0e253c;
+      color: white;
+      font-weight: bold;
+      padding: 12px 16px;
+      border-radius: 40px;
+      width: 100%;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 10px;
+      border: 1px solid #0ff;
+      transition: 0.08s;
+    }
+    .buy-btn:active { transform: translateY(3px); border-bottom-width: 2px; }
+    .buy-btn:disabled { opacity: 0.4; transform: none; cursor: not-allowed; }
+    .expansion-btn, .prestige-btn {
+      background: #2a3f5a;
+      border: 1px solid #ff0;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 30px;
+      font-weight: bold;
+      margin: 8px 0;
+      width: 100%;
+      cursor: pointer;
+    }
+    #top-controls {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 10;
+      display: flex;
+      gap: 10px;
+    }
+    .ctrl-btn {
+      background: #1e334d;
+      border: 1px solid #0ff;
+      color: #e0f0ff;
+      padding: 12px 20px;
+      border-radius: 60px;
+      font-weight: bold;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+    .notification {
+      position: absolute;
+      top: 130px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: gold;
+      font-size: 2.5rem;
+      font-weight: 800;
+      text-shadow: 0 0 30px orange;
+      z-index: 30;
+      pointer-events: none;
+      animation: floatUp 2s forwards;
+    }
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-100px); }
+    }
+    #building-info {
+      position: absolute;
+      top: 120px;
+      right: 20px;
+      z-index: 25;
+      background: #0b1622ee;
+      backdrop-filter: blur(10px);
+      border: 1px solid #0ff;
+      border-radius: 24px;
+      padding: 16px;
+      color: white;
+      display: none;
+      min-width: 220px;
+      box-shadow: 0 0 30px black;
+    }
+    #building-info button {
+      background: #2563eb;
+      border: none;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 30px;
+      margin: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .slot-warning {
+      color: #fbbf24;
+      font-size: 0.85rem;
+      margin-top: 5px;
+      text-align: center;
+    }
+    #business-panel::-webkit-scrollbar { width: 6px; }
+    #business-panel::-webkit-scrollbar-thumb { background: #0ff; border-radius: 10px; }
+
+    /* Dil seçme */
+    #lang-select {
+      position: absolute;
+      top: 20px;
+      right: 220px;
+      z-index: 15;
+      background: #0f1a2b;
+      color: white;
+      border: 1px solid #0ff;
+      border-radius: 30px;
+      padding: 10px 16px;
+      font-weight: bold;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="click-area">
+    <button id="clickButton">💵 EARN 💵</button>
+  </div>
+
+  <div id="game-ui">
+    <div id="money-panel">
+      <span style="font-size:2rem;">💎</span>
+      <span id="moneyDisplay" style="font-size:2.6rem; font-weight:800;">0</span>
+      <span style="margin-left:15px; opacity:0.9;">+<span id="incomeDisplay">0</span>/s</span>
+      <span style="margin-left:10px; font-size:0.9rem; opacity:0.8;">x<span id="prestigeMultDisplay">1.0</span></span>
+    </div>
+  </div>
+
+  <div id="stats">
+    🏢 <span id="statBuildings">Buildings: 0</span> | 🌟 <span id="statPrestige">Prestige: 0</span> | <span id="timeDisplay">☀️ Day</span>
+  </div>
+
+  <div id="top-controls">
+    <button class="ctrl-btn" id="saveBtn">💾</button>
+    <button class="ctrl-btn" id="loadBtn">📂</button>
+    <button class="ctrl-btn" id="resetBtn">🔄</button>
+  </div>
+
+  <select id="lang-select">
+    <option value="en">🇬🇧 English</option>
+    <option value="tr">🇹🇷 Türkçe</option>
+    <option value="ru">🇷🇺 Русский</option>
+    <option value="de">🇩🇪 Deutsch</option>
+    <option value="fr">🇫🇷 Français</option>
+    <option value="es">🇪🇸 Español</option>
+  </select>
+
+  <div id="business-panel">
+    <h3 id="businessTitle" style="margin-top:0; text-align:center; color:#a5f3fc;">🏭 BUSINESSES</h3>
+    <div id="businessList"></div>
+    <button class="expansion-btn" id="expandBtn">🏗️ <span id="expandText">Expand Land</span> (<span id="expandCost">5000</span> 💎)</button>
+    <button class="prestige-btn" id="prestigeBtn">🌟 <span id="prestigeText">Prestige</span> (+<span id="prestigeGain">0</span> <span id="prestigePointsLabel">pts</span>)</button>
+    <div id="slotWarning" class="slot-warning"></div>
+  </div>
+
+  <div id="building-info">
+    <div id="buildingInfoContent"></div>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+    // ---------- DİL VERİSİ ----------
+    const translations = {
+      en: {
+        earn: "💵 EARN 💵",
+        businesses: "🏭 BUSINESSES",
+        expand: "Expand Land",
+        prestige: "Prestige",
+        pts: "pts",
+        day: "☀️ Day",
+        night: "🌙 Night",
+        build: "BUILD",
+        upgrade: "Upgrade",
+        sell: "Sell",
+        income: "Income",
+        cost: "Cost",
+        level: "Lv.",
+        buildingInfo: (name, level, income, upgradeCost, sellPrice) => 
+          `<strong>${name}</strong> Lv.${level}<br>💰 ${income}/s<br>🔼 ${upgradeCost} 💎<br>💵 ${sellPrice} 💎<br>`,
+        cityFull: "⚠️ City full! Expand land.",
+        noEmptySlot: "⚠️ No empty slot! Expand first.",
+        landExpanded: "🏗️ Land expanded!",
+        prestigeConfirm: (gain) => `Reset city for ${gain} prestige points?`,
+        prestigeGained: (gain, mult) => `🌟 +${gain} Prestige! Multiplier: x${mult}`,
+        sold: (amount) => `🏚️ Sold +${amount}`,
+        saved: "💾 Game saved",
+        loaded: "📂 Game loaded",
+        reset: "🔄 Reset",
+        firstBuilding: "🏆 First Building!",
+        tenBuildings: "🏆 Small Town!",
+        rich: "🏆 Rich!",
+        buildingsStat: "Buildings",
+        prestigeStat: "Prestige",
+        baseIncome: "Base",
+        types: [
+          "🍋 Lemonade Stand", "📰 Newspaper", "☕ Coffee Cart", "🛒 Kiosk",
+          "🍔 Fast Food", "📱 Tech Store", "🏢 Office", "🏭 Factory",
+          "🚀 Space Co.", "🌌 Galaxy Corp"
+        ]
+      },
+      tr: {
+        earn: "💵 KAZAN 💵",
+        businesses: "🏭 İŞLETMELER",
+        expand: "Arsa Genişlet",
+        prestige: "Prestij",
+        pts: "puan",
+        day: "☀️ Gündüz",
+        night: "🌙 Gece",
+        build: "İNŞA ET",
+        upgrade: "Yükselt",
+        sell: "Sat",
+        income: "Gelir",
+        cost: "Maliyet",
+        level: "Sv.",
+        buildingInfo: (name, level, income, upgradeCost, sellPrice) =>
+          `<strong>${name}</strong> Sv.${level}<br>💰 ${income}/s<br>🔼 ${upgradeCost} 💎<br>💵 ${sellPrice} 💎<br>`,
+        cityFull: "⚠️ Şehir dolu! Arsa genişlet.",
+        noEmptySlot: "⚠️ Boş yer yok! Önce genişletin.",
+        landExpanded: "🏗️ Arsalar genişledi!",
+        prestigeConfirm: (gain) => `Şehri sıfırlayıp ${gain} prestij puanı kazan?`,
+        prestigeGained: (gain, mult) => `🌟 +${gain} Prestij! Çarpan: x${mult}`,
+        sold: (amount) => `🏚️ Satıldı +${amount}`,
+        saved: "💾 Oyun kaydedildi",
+        loaded: "📂 Oyun yüklendi",
+        reset: "🔄 Sıfırlandı",
+        firstBuilding: "🏆 İlk Bina!",
+        tenBuildings: "🏆 Küçük Kasaba!",
+        rich: "🏆 Zengin!",
+        buildingsStat: "Binalar",
+        prestigeStat: "Prestij",
+        baseIncome: "Temel",
+        types: [
+          "🍋 Limonata", "📰 Gazete", "☕ Kahve", "🛒 Büfe",
+          "🍔 Fast-Food", "📱 Teknoloji", "🏢 Plaza", "🏭 Fabrika",
+          "🚀 Uzay", "🌌 Galaksi"
+        ]
+      },
+      ru: {
+        earn: "💵 ЗАРАБОТАТЬ 💵",
+        businesses: "🏭 БИЗНЕС",
+        expand: "Расширить",
+        prestige: "Престиж",
+        pts: "очк",
+        day: "☀️ День",
+        night: "🌙 Ночь",
+        build: "СТРОИТЬ",
+        upgrade: "Улучшить",
+        sell: "Продать",
+        income: "Доход",
+        cost: "Цена",
+        level: "Ур.",
+        buildingInfo: (name, level, income, upgradeCost, sellPrice) =>
+          `<strong>${name}</strong> Ур.${level}<br>💰 ${income}/с<br>🔼 ${upgradeCost} 💎<br>💵 ${sellPrice} 💎<br>`,
+        cityFull: "⚠️ Город полон! Расширьте.",
+        noEmptySlot: "⚠️ Нет места! Расширьте сначала.",
+        landExpanded: "🏗️ Территория расширена!",
+        prestigeConfirm: (gain) => `Сбросить город за ${gain} очков престижа?`,
+        prestigeGained: (gain, mult) => `🌟 +${gain} Престиж! Множ.: x${mult}`,
+        sold: (amount) => `🏚️ Продано +${amount}`,
+        saved: "💾 Сохранено",
+        loaded: "📂 Загружено",
+        reset: "🔄 Сброшено",
+        firstBuilding: "🏆 Первое здание!",
+        tenBuildings: "🏆 Маленький город!",
+        rich: "🏆 Богач!",
+        buildingsStat: "Зданий",
+        prestigeStat: "Престиж",
+        baseIncome: "База",
+        types: [
+          "🍋 Лимонад", "📰 Газета", "☕ Кофе", "🛒 Киоск",
+          "🍔 Фастфуд", "📱 Техника", "🏢 Офис", "🏭 Завод",
+          "🚀 Космос", "🌌 Галактика"
+        ]
+      },
+      de: {
+        earn: "💵 VERDIENEN 💵",
+        businesses: "🏭 UNTERNEHMEN",
+        expand: "Erweitern",
+        prestige: "Prestige",
+        pts: "Pkt",
+        day: "☀️ Tag",
+        night: "🌙 Nacht",
+        build: "BAUEN",
+        upgrade: "Verbessern",
+        sell: "Verkaufen",
+        income: "Einkommen",
+        cost: "Kosten",
+        level: "Lv.",
+        buildingInfo: (name, level, income, upgradeCost, sellPrice) =>
+          `<strong>${name}</strong> Lv.${level}<br>💰 ${income}/s<br>🔼 ${upgradeCost} 💎<br>💵 ${sellPrice} 💎<br>`,
+        cityFull: "⚠️ Stadt voll! Erweitern.",
+        noEmptySlot: "⚠️ Kein Platz! Zuerst erweitern.",
+        landExpanded: "🏗️ Land erweitert!",
+        prestigeConfirm: (gain) => `Stadt für ${gain} Prestige zurücksetzen?`,
+        prestigeGained: (gain, mult) => `🌟 +${gain} Prestige! Multi: x${mult}`,
+        sold: (amount) => `🏚️ Verkauft +${amount}`,
+        saved: "💾 Gespeichert",
+        loaded: "📂 Geladen",
+        reset: "🔄 Zurückgesetzt",
+        firstBuilding: "🏆 Erstes Gebäude!",
+        tenBuildings: "🏆 Kleinstadt!",
+        rich: "🏆 Reich!",
+        buildingsStat: "Gebäude",
+        prestigeStat: "Prestige",
+        baseIncome: "Basis",
+        types: [
+          "🍋 Limonade", "📰 Zeitung", "☕ Kaffee", "🛒 Kiosk",
+          "🍔 Fast Food", "📱 Technik", "🏢 Büro", "🏭 Fabrik",
+          "🚀 Raumfahrt", "🌌 Galaxis"
+        ]
+      },
+      fr: {
+        earn: "💵 GAGNER 💵",
+        businesses: "🏭 ENTREPRISES",
+        expand: "Agrandir",
+        prestige: "Prestige",
+        pts: "pts",
+        day: "☀️ Jour",
+        night: "🌙 Nuit",
+        build: "CONSTRUIRE",
+        upgrade: "Améliorer",
+        sell: "Vendre",
+        income: "Revenu",
+        cost: "Coût",
+        level: "Niv.",
+        buildingInfo: (name, level, income, upgradeCost, sellPrice) =>
+          `<strong>${name}</strong> Niv.${level}<br>💰 ${income}/s<br>🔼 ${upgradeCost} 💎<br>💵 ${sellPrice} 💎<br>`,
+        cityFull: "⚠️ Ville pleine ! Agrandissez.",
+        noEmptySlot: "⚠️ Pas de place ! Agrandissez d'abord.",
+        landExpanded: "🏗️ Terrain agrandi !",
+        prestigeConfirm: (gain) => `Réinitialiser pour ${gain} pts de prestige ?`,
+        prestigeGained: (gain, mult) => `🌟 +${gain} Prestige ! Multi: x${mult}`,
+        sold: (amount) => `🏚️ Vendu +${amount}`,
+        saved: "💾 Sauvegardé",
+        loaded: "📂 Chargé",
+        reset: "🔄 Réinitialisé",
+        firstBuilding: "🏆 Premier bâtiment !",
+        tenBuildings: "🏆 Petite ville !",
+        rich: "🏆 Riche !",
+        buildingsStat: "Bâtiments",
+        prestigeStat: "Prestige",
+        baseIncome: "Base",
+        types: [
+          "🍋 Limonade", "📰 Journal", "☕ Café", "🛒 Kiosque",
+          "🍔 Fast-food", "📱 Tech", "🏢 Bureau", "🏭 Usine",
+          "🚀 Spatial", "🌌 Galaxie"
+        ]
+      },
+      es: {
+        earn: "💵 GANAR 💵",
+        businesses: "🏭 NEGOCIOS",
+        expand: "Expandir",
+        prestige: "Prestigio",
+        pts: "pts",
+        day: "☀️ Día",
+        night: "🌙 Noche",
+        build: "CONSTRUIR",
+        upgrade: "Mejorar",
+        sell: "Vender",
+        income: "Ingresos",
+        cost: "Coste",
+        level: "Nv.",
+        buildingInfo: (name, level, income, upgradeCost, sellPrice) =>
+          `<strong>${name}</strong> Nv.${level}<br>💰 ${income}/s<br>🔼 ${upgradeCost} 💎<br>💵 ${sellPrice} 💎<br>`,
+        cityFull: "⚠️ ¡Ciudad llena! Expande.",
+        noEmptySlot: "⚠️ ¡Sin espacio! Expande primero.",
+        landExpanded: "🏗️ ¡Terreno expandido!",
+        prestigeConfirm: (gain) => `¿Reiniciar por ${gain} pts de prestigio?`,
+        prestigeGained: (gain, mult) => `🌟 +${gain} Prestigio! Mult: x${mult}`,
+        sold: (amount) => `🏚️ Vendido +${amount}`,
+        saved: "💾 Guardado",
+        loaded: "📂 Cargado",
+        reset: "🔄 Reiniciado",
+        firstBuilding: "🏆 ¡Primer edificio!",
+        tenBuildings: "🏆 ¡Pueblo pequeño!",
+        rich: "🏆 ¡Rico!",
+        buildingsStat: "Edificios",
+        prestigeStat: "Prestigio",
+        baseIncome: "Base",
+        types: [
+          "🍋 Limonada", "📰 Periódico", "☕ Café", "🛒 Quiosco",
+          "🍔 Comida rápida", "📱 Tecnología", "🏢 Oficina", "🏭 Fábrica",
+          "🚀 Espacio", "🌌 Galaxia"
+        ]
+      }
+    };
+
+    let currentLang = 'en';
+    function t(key, ...args) {
+      let val = translations[currentLang][key];
+      if (typeof val === 'function') return val(...args);
+      return val || key;
+    }
+
+    // İşletme tiplerini dile göre al
+    function getBusinessTypes() {
+      const names = translations[currentLang].types;
+      return [
+        { name: names[0], baseCost: 15, baseIncome: 1, color: "#fbbf24" },
+        { name: names[1], baseCost: 60, baseIncome: 4, color: "#a78bfa" },
+        { name: names[2], baseCost: 200, baseIncome: 12, color: "#d97706" },
+        { name: names[3], baseCost: 700, baseIncome: 35, color: "#34d399" },
+        { name: names[4], baseCost: 2000, baseIncome: 100, color: "#f472b6" },
+        { name: names[5], baseCost: 6000, baseIncome: 280, color: "#38bdf8" },
+        { name: names[6], baseCost: 18000, baseIncome: 800, color: "#c084fc" },
+        { name: names[7], baseCost: 50000, baseIncome: 2500, color: "#f87171", hasSmoke: true },
+        { name: names[8], baseCost: 150000, baseIncome: 8000, color: "#a3e635" },
+        { name: names[9], baseCost: 500000, baseIncome: 30000, color: "#2dd4bf", hasAntenna: true }
+      ];
+    }
+
+    // Oyun değişkenleri
+    let money = 100;
+    let buildings = [];
+    let nextBuildingId = 1;
+    let prestigePoints = 0;
+    let prestigeMultiplier = 1.0;
+    let expansionLevel = 0;
+    const BASE_SLOTS = 10;
+    let currentSlots = BASE_SLOTS;
+    let totalLifetimeEarnings = 0;
+    let selectedBuilding = null;
+    let achievements = {};
+    let audioCtx;
+    
+    // Three.js
+    let scene, camera, renderer, labelRenderer, controls, raycaster, mouse;
+    let sunLight, ambientLight;
+    let npcs = [];
+    let dayTime = 0;
+    let decorativeObjects = [];
+    let moonMesh, starsPoints, rainParticles, cloudsGroup, birdsGroup;
+    let monumentMesh;
+    let monumentLevel = 0;
+
+    function getExpansionCost() { return 5000 * Math.pow(2, expansionLevel); }
+    function calculatePrestigeGain() {
+      if (totalLifetimeEarnings < 1000) return 0;
+      return Math.floor(Math.log10(totalLifetimeEarnings) * 2) - 5;
+    }
+    function formatMoney(v) {
+      if (v >= 1e6) return (v/1e6).toFixed(2)+'M';
+      if (v >= 1e3) return (v/1e3).toFixed(2)+'K';
+      return v.toFixed(2);
+    }
+    function getBldCost(typeIndex, level) {
+      const BT = getBusinessTypes();
+      return Math.floor(BT[typeIndex].baseCost * Math.pow(1.3, level));
+    }
+    function getBldIncome(typeIndex, level) {
+      const BT = getBusinessTypes();
+      return BT[typeIndex].baseIncome * Math.pow(1.12, level) * prestigeMultiplier;
+    }
+    function totalIncome() {
+      return buildings.reduce((sum, b) => sum + getBldIncome(b.typeIndex, b.level), 0);
+    }
+
+    function initThree() {
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0a0a20);
+      scene.fog = new THREE.FogExp2(0x0a0a20, 0.0006);
+      camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 0.1, 250);
+      camera.position.set(22, 18, 30);
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(innerWidth, innerHeight);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      document.body.appendChild(renderer.domElement);
+      labelRenderer = new CSS2DRenderer();
+      labelRenderer.setSize(innerWidth, innerHeight);
+      labelRenderer.domElement.style.position = 'absolute';
+      labelRenderer.domElement.style.top = '0';
+      labelRenderer.domElement.style.pointerEvents = 'none';
+      document.body.appendChild(labelRenderer.domElement);
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true; controls.autoRotate = true; controls.target.set(5, 2, 0);
+      raycaster = new THREE.Raycaster(); mouse = new THREE.Vector2();
+      ambientLight = new THREE.AmbientLight(0x404060); scene.add(ambientLight);
+      sunLight = new THREE.DirectionalLight(0xfff5d1, 1.2);
+      sunLight.position.set(10, 30, 10); sunLight.castShadow = true;
+      sunLight.shadow.mapSize.set(1024,1024);
+      const d=35; sunLight.shadow.camera.left=-d; sunLight.shadow.camera.right=d; sunLight.shadow.camera.top=d; sunLight.shadow.camera.bottom=-d;
+      scene.add(sunLight);
+      scene.add(new THREE.GridHelper(60, 30, 0x0ff, 0x336688));
+      const ground = new THREE.Mesh(new THREE.PlaneGeometry(60,60), new THREE.MeshStandardMaterial({color:0x112233, roughness:0.7}));
+      ground.rotation.x = -Math.PI/2; ground.receiveShadow = true; scene.add(ground);
+      moonMesh = new THREE.Mesh(new THREE.SphereGeometry(1.5), new THREE.MeshStandardMaterial({color:0xffffcc, emissive:new THREE.Color(0x333311)}));
+      moonMesh.position.set(20, 25, -30); scene.add(moonMesh);
+      const starsGeo = new THREE.BufferGeometry(); const starsPos = new Float32Array(800*3);
+      for(let i=0;i<800*3;i+=3){ starsPos[i]=(Math.random()-0.5)*180; starsPos[i+1]=Math.random()*60+15; starsPos[i+2]=(Math.random()-0.5)*180; }
+      starsGeo.setAttribute('position', new THREE.BufferAttribute(starsPos,3));
+      starsPoints = new THREE.Points(starsGeo, new THREE.PointsMaterial({color:0xffffff, size:0.25, transparent:true, opacity:0.9}));
+      scene.add(starsPoints);
+      const rainGeo = new THREE.BufferGeometry(); const rainCount=1500; const rainPos=new Float32Array(rainCount*3);
+      rainGeo.setAttribute('position', new THREE.BufferAttribute(rainPos,3));
+      rainParticles = new THREE.Points(rainGeo, new THREE.PointsMaterial({color:0xaaaacc, size:0.15, transparent:true, opacity:0.3}));
+      scene.add(rainParticles);
+      cloudsGroup = new THREE.Group();
+      for (let i=0; i<20; i++) {
+        const cloud = new THREE.Mesh(new THREE.SphereGeometry(1.2 + Math.random()*0.8, 7), new THREE.MeshStandardMaterial({color:0xffffff, transparent:true, opacity:0.5, roughness:0.8}));
+        cloud.position.set((Math.random()-0.5)*50, 18+Math.random()*8, (Math.random()-0.5)*50);
+        cloudsGroup.add(cloud);
+      }
+      scene.add(cloudsGroup);
+      birdsGroup = new THREE.Group();
+      for (let i=0; i<30; i++) {
+        const bird = new THREE.Mesh(new THREE.ConeGeometry(0.15,0.4,4), new THREE.MeshStandardMaterial({color:0x222222}));
+        bird.position.set((Math.random()-0.5)*30, 15+Math.random()*10, (Math.random()-0.5)*30);
+        bird.rotation.z = Math.PI/2;
+        birdsGroup.add(bird);
+      }
+      scene.add(birdsGroup);
+    }
+
+    function createBuildingMesh(typeIndex, level, position) {
+      const BT = getBusinessTypes();
+      const color = BT[typeIndex].color;
+      const height = 1.0 + level * 0.55;
+      const group = new THREE.Group();
+      group.position.copy(position);
+      const body = new THREE.Mesh(new THREE.BoxGeometry(1.8, height, 1.8), new THREE.MeshStandardMaterial({ color, roughness:0.3, metalness:0.1, emissive: new THREE.Color(color).multiplyScalar(0.2) }));
+      body.castShadow=true; body.receiveShadow=true; body.position.y=height/2;
+      group.add(body);
+      const roof = new THREE.Mesh(new THREE.ConeGeometry(1.3, 0.7, 4), new THREE.MeshStandardMaterial({color:0x334455, emissive:new THREE.Color(0x113355)}));
+      roof.castShadow=true; roof.receiveShadow=true; roof.position.y=height+0.35; roof.rotation.y=Math.PI/4;
+      group.add(roof);
+      if (BT[typeIndex].hasAntenna) {
+        const antenna = new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.08,0.8), new THREE.MeshStandardMaterial({color:0xcccccc}));
+        antenna.position.y=height+1.0; group.add(antenna);
+      }
+      const maxWindows = Math.floor((height - 0.8) / 0.9);
+      const windowMat = new THREE.MeshStandardMaterial({ color:0xffdd77, emissive:new THREE.Color(0xffaa00).multiplyScalar(0.6) });
+      for (let i=0; i<maxWindows; i++) {
+        const wy = 0.6 + i*0.9;
+        const w1 = new THREE.Mesh(new THREE.BoxGeometry(0.4,0.4,0.1), windowMat); w1.position.set(0.5, wy, 0.91); group.add(w1);
+        const w2 = w1.clone(); w2.position.set(-0.5, wy, 0.91); group.add(w2);
+      }
+      if (BT[typeIndex].hasSmoke) {
+        const chimney = new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.25,1.2), new THREE.MeshStandardMaterial({color:0x555555}));
+        chimney.position.set(0.6, height+0.4, -0.5); group.add(chimney);
+        const smokeParticles = new THREE.Group();
+        for (let p=0; p<5; p++) {
+          const smoke = new THREE.Mesh(new THREE.SphereGeometry(0.2,4), new THREE.MeshStandardMaterial({color:0xaaaaaa, transparent:true, opacity:0.4}));
+          smoke.position.set(0, p*0.4, 0); smoke.userData={speed:0.02+Math.random()*0.02};
+          smokeParticles.add(smoke);
+        }
+        smokeParticles.position.set(0.6, height+1.2, -0.5); group.add(smokeParticles);
+        group.userData.smokeParticles = smokeParticles;
+      }
+      return group;
+    }
+
+    function addBuildingToScene(bld) {
+      const mesh = createBuildingMesh(bld.typeIndex, bld.level, bld.position);
+      mesh.userData.buildingId = bld.id;
+      bld.mesh = mesh;
+      mesh.scale.set(0.1, 0.1, 0.1);
+      scene.add(mesh);
+      const BT = getBusinessTypes();
+      const div = document.createElement('div');
+      div.textContent = `${BT[bld.typeIndex].name} ${t('level')}${bld.level}`;
+      div.style.cssText = `color:white; font-size:12px; background:#00000080; padding:2px 10px; border-radius:20px; border:1px solid ${BT[bld.typeIndex].color}; white-space:nowrap;`;
+      const label = new CSS2DObject(div);
+      label.position.copy(bld.position.clone().add(new THREE.Vector3(0, 1.2 + bld.level*0.55 + 0.5, 0)));
+      bld.label = label; scene.add(label);
+      addStreetLamp(bld.position, bld.id);
+    }
+
+    function removeBuildingFromScene(bld) {
+      if (bld.mesh) {
+        bld.mesh.traverse(child => {
+          if (child.geometry) child.geometry.dispose();
+          if (child.material) Array.isArray(child.material) ? child.material.forEach(m=>m.dispose()) : child.material.dispose();
+        });
+        scene.remove(bld.mesh);
+      }
+      if (bld.label) scene.remove(bld.label);
+      const lampIndex = decorativeObjects.findIndex(o => o.type==='lamp' && o.buildingId===bld.id);
+      if (lampIndex !== -1) {
+        scene.remove(decorativeObjects[lampIndex].mesh);
+        decorativeObjects.splice(lampIndex, 1);
+      }
+    }
+
+    function refreshBuildingMesh(bld) {
+      removeBuildingFromScene(bld);
+      addBuildingToScene(bld);
+      if (bld.mesh) bld.mesh.scale.set(1,1,1);
+      if (selectedBuilding?.id === bld.id) selectBuilding(bld);
+    }
+
+    function addStreetLamp(position, buildingId) {
+      const lampGroup = new THREE.Group();
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.12,2.5), new THREE.MeshStandardMaterial({color:0x334455}));
+      pole.position.y = 1.25;
+      lampGroup.add(pole);
+      const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.25), new THREE.MeshStandardMaterial({color:0xffffaa, emissive:new THREE.Color(0xffdd88)}));
+      bulb.position.y = 2.75;
+      lampGroup.add(bulb);
+      lampGroup.position.copy(position.clone().add(new THREE.Vector3(1.2, 0, 1.2)));
+      scene.add(lampGroup);
+      decorativeObjects.push({ type:'lamp', mesh:lampGroup, position:lampGroup.position.clone(), buildingId });
+    }
+
+    function addTree(position) {
+      const treeGroup = new THREE.Group();
+      treeGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.25,2), new THREE.MeshStandardMaterial({color:0x8B5A2B})).translateY(1));
+      treeGroup.add(new THREE.Mesh(new THREE.ConeGeometry(0.7,1.5,8), new THREE.MeshStandardMaterial({color:0x2d5a27})).translateY(2.3));
+      treeGroup.add(new THREE.Mesh(new THREE.ConeGeometry(0.5,1.2,8), new THREE.MeshStandardMaterial({color:0x3a6b33})).translateY(3.2));
+      treeGroup.position.copy(position);
+      scene.add(treeGroup);
+      decorativeObjects.push({ type:'tree', mesh:treeGroup, position });
+    }
+
+    function populateDecorations() {
+      decorativeObjects.filter(o=>o.type==='tree').forEach(o=>scene.remove(o.mesh));
+      decorativeObjects = decorativeObjects.filter(o=>o.type!=='tree');
+      const treeCount = Math.floor(currentSlots/3)+2;
+      for (let i=0;i<treeCount;i++) {
+        const angle=Math.random()*Math.PI*2, radius=5+Math.random()*10;
+        const pos=new THREE.Vector3(Math.cos(angle)*radius,0,Math.sin(angle)*radius);
+        if (!buildings.some(b=>b.position.distanceTo(pos)<2.5)) addTree(pos);
+      }
+      updateMonument();
+    }
+
+    function updateMonument() {
+      const newLevel = Math.floor(buildings.length / 5);
+      if (newLevel === monumentLevel) return;
+      if (monumentMesh) scene.remove(monumentMesh);
+      monumentLevel = newLevel;
+      if (monumentLevel === 0) return;
+      const height = 2 + monumentLevel * 1.5;
+      const group = new THREE.Group();
+      const base = new THREE.Mesh(new THREE.CylinderGeometry(1, 1.2, height), new THREE.MeshStandardMaterial({color:0xcccccc, roughness:0.2, metalness:0.8, emissive:new THREE.Color(0x111111)}));
+      base.position.y = height/2;
+      group.add(base);
+      const torch = new THREE.Mesh(new THREE.SphereGeometry(0.5), new THREE.MeshStandardMaterial({color:0xffaa00, emissive:new THREE.Color(0xff5500)}));
+      torch.position.y = height + 0.5;
+      group.add(torch);
+      group.position.set(0, 0, -8);
+      scene.add(group);
+      monumentMesh = group;
+    }
+
+    function findEmptySlot() {
+      const slots = [];
+      const spacing = 3.8, startX = -2, startZ = -6, cols = 5;
+      for (let i = 0; i < currentSlots; i++) {
+        const row = Math.floor(i / cols), col = i % cols;
+        slots.push(new THREE.Vector3(startX + col * spacing + (row%2)*0.2, 0, startZ + row * spacing));
+      }
+      const used = buildings.map(b => b.position);
+      return slots.find(s => !used.some(p => p.distanceTo(s) < 0.1)) || null;
+    }
+
+    function purchaseBusiness(typeIndex) {
+      if (buildings.length >= currentSlots) {
+        document.getElementById('slotWarning').textContent = t('cityFull');
+        return;
+      }
+      const cost = getBldCost(typeIndex, 1);
+      if (money < cost) return;
+      const slot = findEmptySlot();
+      if (!slot) {
+        document.getElementById('slotWarning').textContent = t('noEmptySlot');
+        return;
+      }
+      money -= cost; totalLifetimeEarnings += cost;
+      const bld = { id: nextBuildingId++, typeIndex, level:1, position: slot, mesh:null, label:null };
+      buildings.push(bld);
+      addBuildingToScene(bld);
+      populateDecorations();
+      updateUI();
+      showNotification(`+1 ${getBusinessTypes()[typeIndex].name}`, getBusinessTypes()[typeIndex].color);
+      checkAchievements();
+    }
+
+    function upgradeBuilding(bld) {
+      const cost = getBldCost(bld.typeIndex, bld.level+1);
+      if (money < cost) return;
+      money -= cost; totalLifetimeEarnings += cost;
+      bld.level++;
+      refreshBuildingMesh(bld);
+      updateUI();
+    }
+
+    function sellBuilding(bld) {
+      const totalInvested = Array.from({length:bld.level},(_,i)=>getBldCost(bld.typeIndex,i+1)).reduce((a,b)=>a+b,0);
+      const refund = Math.floor(totalInvested*0.5);
+      money += refund;
+      removeBuildingFromScene(bld);
+      buildings = buildings.filter(b=>b.id!==bld.id);
+      if (selectedBuilding?.id===bld.id) { selectedBuilding=null; document.getElementById('building-info').style.display='none'; }
+      populateDecorations();
+      updateUI();
+      showNotification(t('sold', formatMoney(refund)), '#f87171');
+    }
+
+    function selectBuilding(bld) {
+      selectedBuilding = bld;
+      const BT = getBusinessTypes();
+      const name = BT[bld.typeIndex].name;
+      const income = formatMoney(getBldIncome(bld.typeIndex, bld.level));
+      const upgradeCost = formatMoney(getBldCost(bld.typeIndex, bld.level+1));
+      const totalInvested = Array.from({length:bld.level},(_,i)=>getBldCost(bld.typeIndex,i+1)).reduce((a,b)=>a+b,0);
+      const sellPrice = formatMoney(Math.floor(totalInvested*0.5));
+      document.getElementById('buildingInfoContent').innerHTML = 
+        t('buildingInfo', name, bld.level, income, upgradeCost, sellPrice) +
+        `<button id="upgradeBtn">${t('upgrade')}</button>
+         <button id="sellBtn">${t('sell')}</button>`;
+      document.getElementById('building-info').style.display = 'block';
+      document.getElementById('upgradeBtn').onclick = () => upgradeBuilding(bld);
+      document.getElementById('sellBtn').onclick = () => sellBuilding(bld);
+    }
+
+    function onCanvasClick(event) {
+      mouse.x = (event.clientX / renderer.domElement.clientWidth)*2-1;
+      mouse.y = -(event.clientY / renderer.domElement.clientHeight)*2+1;
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(buildings.map(b=>b.mesh).filter(m=>m), true);
+      if (intersects.length > 0) {
+        let obj = intersects[0].object;
+        while (obj && !obj.userData?.buildingId) obj = obj.parent;
+        if (obj?.userData?.buildingId) {
+          const bld = buildings.find(b=>b.id===obj.userData.buildingId);
+          if (bld) { selectBuilding(bld); return; }
+        }
+      }
+      selectedBuilding = null;
+      document.getElementById('building-info').style.display = 'none';
+    }
+
+    function updateNPCs() {
+      const desired = Math.min(buildings.length * 2, 60);
+      const npcBoundary = Math.min(25, 15 + expansionLevel * 5);
+      while (npcs.length < desired) {
+        const group = new THREE.Group();
+        group.add(new THREE.Mesh(new THREE.SphereGeometry(0.25,8), new THREE.MeshStandardMaterial({color: new THREE.Color(`hsl(${Math.random()*360},30%,70%)`)})).translateY(0.5));
+        group.add(new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.2,0.6,8), new THREE.MeshStandardMaterial({color: new THREE.Color(`hsl(${Math.random()*360},40%,70%)`)})));
+        const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.08,0.45), new THREE.MeshStandardMaterial({color:0x333333}));
+        group.add(leg.clone().translateX(-0.12).translateY(-0.45));
+        group.add(leg.clone().translateX(0.12).translateY(-0.45));
+        const angle = Math.random()*Math.PI*2, radius = Math.random()*18;
+        group.position.set(Math.cos(angle)*radius, 0.675, Math.sin(angle)*radius);
+        scene.add(group);
+        npcs.push({ mesh:group, vel:new THREE.Vector3((Math.random()-0.5)*2,0,(Math.random()-0.5)*2).normalize().multiplyScalar(0.04), timer:Math.random()*2 });
+      }
+      while (npcs.length > desired) scene.remove(npcs.pop().mesh);
+      npcs.forEach(npc => {
+        npc.timer -= 0.016;
+        if (npc.timer <= 0) { npc.vel.set((Math.random()-0.5)*2,0,(Math.random()-0.5)*2).normalize().multiplyScalar(0.04); npc.timer=1+Math.random()*2; }
+        npc.mesh.position.x += npc.vel.x; npc.mesh.position.z += npc.vel.z;
+        if (Math.abs(npc.mesh.position.x) > npcBoundary) { npc.mesh.position.x = Math.sign(npc.mesh.position.x)*npcBoundary; npc.vel.x*=-1; }
+        if (Math.abs(npc.mesh.position.z) > npcBoundary) { npc.mesh.position.z = Math.sign(npc.mesh.position.z)*npcBoundary; npc.vel.z*=-1; }
+      });
+    }
+
+    function updateDayNight(delta) {
+      dayTime += delta * 0.15;
+      const sin = Math.sin(dayTime);
+      sunLight.intensity = 0.4 + sin*0.5+0.3;
+      ambientLight.intensity = 0.2+Math.max(0,sin)*0.4;
+      scene.background = new THREE.Color(0.02+Math.max(0,sin)*0.1, 0.05+Math.max(0,sin)*0.15, 0.12+Math.max(0,sin)*0.2);
+      document.getElementById('timeDisplay').textContent = sin>0 ? t('day') : t('night');
+      moonMesh.visible = sin<0;
+      starsPoints.material.opacity = sin<0?0.9:0.2;
+      decorativeObjects.forEach(obj => { if (obj.type==='lamp') obj.mesh.children[1].material.emissiveIntensity = sin<0?0.8:0.1; });
+      rainParticles.material.opacity = sin<0?0.5:0.05;
+      cloudsGroup.children.forEach(c => c.material.opacity = 0.3 + Math.max(0,sin)*0.3);
+      birdsGroup.children.forEach(b => b.visible = sin>0);
+    }
+
+    function expandCity() {
+      const cost = getExpansionCost();
+      if (money < cost) return;
+      money -= cost;
+      expansionLevel++;
+      currentSlots = BASE_SLOTS + expansionLevel*5;
+      populateDecorations();
+      updateUI();
+      showNotification(t('landExpanded'), '#a5f3fc');
+    }
+
+    function prestige() {
+      const gain = calculatePrestigeGain();
+      if (gain <=0 || !confirm(t('prestigeConfirm', gain))) return;
+      prestigePoints += gain;
+      prestigeMultiplier = 1 + prestigePoints*0.1;
+      money = 100;
+      buildings.forEach(b=>removeBuildingFromScene(b));
+      buildings = [];
+      expansionLevel=0; currentSlots=BASE_SLOTS; totalLifetimeEarnings=0;
+      selectedBuilding=null; document.getElementById('building-info').style.display='none';
+      populateDecorations();
+      updateUI();
+      showNotification(t('prestigeGained', gain, prestigeMultiplier.toFixed(1)), '#ffd700');
+    }
+
+    function checkAchievements() {
+      const count = buildings.length;
+      if (count===1 && !achievements.first) { achievements.first=true; showNotification(t('firstBuilding'),'#ffd700'); }
+      if (count>=10 && !achievements.ten) { achievements.ten=true; showNotification(t('tenBuildings'),'#ffd700'); }
+      if (money>=100000 && !achievements.rich) { achievements.rich=true; showNotification(t('rich'),'#ffd700'); }
+    }
+
+    function updateUI() {
+      document.getElementById('moneyDisplay').textContent = formatMoney(money);
+      document.getElementById('incomeDisplay').textContent = formatMoney(totalIncome());
+      document.getElementById('statBuildings').textContent = `${t('buildingsStat')}: ${buildings.length}`;
+      document.getElementById('statPrestige').textContent = `${t('prestigeStat')}: ${prestigePoints}`;
+      document.getElementById('prestigeMultDisplay').textContent = prestigeMultiplier.toFixed(1);
+      document.getElementById('expandCost').textContent = formatMoney(getExpansionCost());
+      document.getElementById('prestigeGain').textContent = calculatePrestigeGain();
+      document.getElementById('expandText').textContent = t('expand');
+      document.getElementById('prestigeText').textContent = t('prestige');
+      document.getElementById('prestigePointsLabel').textContent = t('pts');
+      document.getElementById('businessTitle').textContent = t('businesses');
+      document.getElementById('clickButton').textContent = t('earn');
+      document.getElementById('expandBtn').disabled = money < getExpansionCost();
+      document.getElementById('prestigeBtn').disabled = calculatePrestigeGain()<=0;
+      document.getElementById('slotWarning').textContent = buildings.length >= currentSlots ? t('cityFull') : '';
+      renderBusinessList();
+    }
+
+    function renderBusinessList() {
+      const BT = getBusinessTypes();
+      let html='';
+      BT.forEach((bt,i)=>{
+        const cost=getBldCost(i,1);
+        const canAfford = money>=cost && buildings.length < currentSlots && findEmptySlot() !== null;
+        html+=`<div class="business-item" style="border-left-color:${bt.color};"><strong>${bt.name}</strong> (${t('baseIncome')}: ${formatMoney(bt.baseIncome)}/s)<br>${t('cost')}: ${formatMoney(cost)} 💎<button class="buy-btn" data-type="${i}" ${!canAfford?'disabled':''}>${t('build')}</button></div>`;
+      });
+      document.getElementById('businessList').innerHTML=html;
+      document.querySelectorAll('.buy-btn').forEach(btn=>btn.addEventListener('click',(e)=>purchaseBusiness(parseInt(e.currentTarget.dataset.type))));
+    }
+
+    function showNotification(text,color){
+      const div=document.createElement('div'); div.className='notification'; div.textContent=text; div.style.color=color;
+      document.body.appendChild(div); setTimeout(()=>div.remove(),1900);
+    }
+
+    function saveGame(){
+      const data={money,buildings:buildings.map(b=>({id:b.id,typeIndex:b.typeIndex,level:b.level,position:{x:b.position.x,y:b.position.y,z:b.position.z}})),prestigePoints,expansionLevel,totalLifetimeEarnings,currentSlots,nextBuildingId,achievements,lang:currentLang};
+      localStorage.setItem('tycoon3Dv6',JSON.stringify(data));
+      showNotification(t('saved'),'#6ee7b7');
+    }
+    function loadGame(){
+      const raw=localStorage.getItem('tycoon3Dv6'); if(!raw) return;
+      try{
+        const data=JSON.parse(raw);
+        money=data.money; prestigePoints=data.prestigePoints; expansionLevel=data.expansionLevel; totalLifetimeEarnings=data.totalLifetimeEarnings; currentSlots=data.currentSlots||BASE_SLOTS; nextBuildingId=data.nextBuildingId; achievements=data.achievements||{};
+        if (data.lang) { currentLang = data.lang; document.getElementById('lang-select').value = currentLang; }
+        prestigeMultiplier=1+prestigePoints*0.1;
+        buildings.forEach(b=>removeBuildingFromScene(b)); buildings=[];
+        data.buildings.forEach(bd=>{
+          const bld={id:bd.id,typeIndex:bd.typeIndex,level:bd.level,position:new THREE.Vector3(bd.position.x,bd.position.y,bd.position.z),mesh:null,label:null};
+          buildings.push(bld); addBuildingToScene(bld);
+        });
+        nextBuildingId=Math.max(...buildings.map(b=>b.id),0)+1;
+        populateDecorations(); updateUI(); showNotification(t('loaded'),'#a78bfa');
+      }catch(e){console.warn('Kayıt hatası');}
+    }
+    function resetGame(){
+      if(!confirm(t('prestigeConfirm','')))return;
+      buildings.forEach(b=>removeBuildingFromScene(b));
+      decorativeObjects.forEach(o=>scene.remove(o.mesh)); decorativeObjects=[];
+      npcs.forEach(n=>scene.remove(n.mesh)); npcs=[];
+      if(monumentMesh) scene.remove(monumentMesh);
+      money=100; prestigePoints=0; expansionLevel=0; currentSlots=BASE_SLOTS; totalLifetimeEarnings=0; nextBuildingId=1; achievements={}; monumentLevel=0; monumentMesh=null;
+      prestigeMultiplier=1.0; selectedBuilding=null; document.getElementById('building-info').style.display='none';
+      updateUI(); localStorage.removeItem('tycoon3Dv6'); showNotification(t('reset'),'#fca5a5');
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const delta=0.016;
+      controls.update();
+      updateDayNight(delta);
+      updateNPCs();
+      buildings.forEach(b=>{ if(b.mesh&&b.mesh.scale.x<1) b.mesh.scale.lerp(new THREE.Vector3(1,1,1),0.1); });
+      const rainPos=rainParticles.geometry.attributes.position.array;
+      for(let i=0;i<rainPos.length;i+=3){ rainPos[i+1]-=0.15; if(rainPos[i+1]<0){ rainPos[i]=(Math.random()-0.5)*60; rainPos[i+1]=25+Math.random()*20; rainPos[i+2]=(Math.random()-0.5)*60; } }
+      rainParticles.geometry.attributes.position.needsUpdate=true;
+      cloudsGroup.rotation.y += 0.0002;
+      birdsGroup.children.forEach((bird,idx)=>{ bird.position.x += 0.02; if(bird.position.x>25) bird.position.x=-25; bird.position.y += Math.sin(Date.now()*0.01+idx)*0.01; });
+      renderer.render(scene, camera);
+      labelRenderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize',()=>{
+      camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth,innerHeight); labelRenderer.setSize(innerWidth,innerHeight);
+    });
+
+    // Ses
+    function initAudio() { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} }
+    function playTone(freq, duration, type='sine') {
+      if (!audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+      osc.type = type; osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(); osc.stop(audioCtx.currentTime + duration);
+    }
+
+    // Dil değiştirme
+    document.getElementById('lang-select').addEventListener('change', (e) => {
+      currentLang = e.target.value;
+      updateUI();
+      // Mevcut binaların etiketlerini güncelle
+      buildings.forEach(b => {
+        if (b.label) {
+          const BT = getBusinessTypes();
+          b.label.element.textContent = `${BT[b.typeIndex].name} ${t('level')}${b.level}`;
+        }
+      });
+    });
+
+    // Başlat
+    initAudio(); initThree();
+    loadGame();
+    if (buildings.length===0){ updateUI(); populateDecorations(); }
+    document.getElementById('clickButton').addEventListener('click',()=>{
+      const earn=Math.max(5,5+Math.floor(totalIncome()*0.1));
+      money+=earn; totalLifetimeEarnings+=earn; updateUI();
+      playTone(660,0.08); showNotification(`+${formatMoney(earn)} 💎`,'#fde047');
+      checkAchievements();
+    });
+    renderer.domElement.addEventListener('click',onCanvasClick);
+    document.getElementById('saveBtn').addEventListener('click',saveGame);
+    document.getElementById('loadBtn').addEventListener('click',loadGame);
+    document.getElementById('resetBtn').addEventListener('click',resetGame);
+    document.getElementById('expandBtn').addEventListener('click',expandCity);
+    document.getElementById('prestigeBtn').addEventListener('click',prestige);
+    setInterval(()=>{ const inc=totalIncome(); if(inc>0){ money+=inc; totalLifetimeEarnings+=inc; updateUI(); } },1000);
+    setInterval(saveGame,30000);
+    animate();
+  </script>
+</body>
+</html>
